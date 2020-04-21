@@ -8,15 +8,15 @@ const credentialsRouter = require('./credentialsRouter.js')
 
 const server = express();
 
-// const corsOptions = {
-//     origin: 'http://localhost:3000',
-//     optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-//     credentials: true
-// }
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+    credentials: true
+}
 
 server.use(express.json());
 server.use(helmet());
-// server.use(cors(corsOptions));
+server.use(cors(corsOptions));
 
 server.use('/api', credentialsRouter);
 server.use('/api/users', authenticator, userRouter);

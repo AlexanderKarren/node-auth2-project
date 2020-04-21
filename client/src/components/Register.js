@@ -1,11 +1,25 @@
 import React, { useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
-import axios from 'axios'
-import { Input, Button, Loader, Dimmer, Icon } from 'semantic-ui-react'
+import axios from '../utils/axiosWithAuth'
+import { Input, Button, Loader, Dimmer, Icon, Dropdown } from 'semantic-ui-react'
+
+const departments = [
+    {
+        key: 'Finance',
+        text: 'Finance',
+        value: 'finance',
+    },
+    {
+        key: 'Media',
+        text: 'Media',
+        value: 'media',
+    },
+]
 
 const Register = () => {
     const [values, updateValues] = useState({
         username: "",
+        department: "",
         password: "",
         confirmPassword: ""
     })
@@ -14,11 +28,13 @@ const Register = () => {
     const [maskPassword, toggleMask] = useState(true);
     const { push } = useHistory();
 
-    const handleChanges = event => {
+    const handleChanges = (event, data) => {
+        console.log(values);
         updateValues({
             ...values,
-            [event.target.name]: event.target.value
+            [data.name]: data.value
         })
+   
     }
 
     const handleSubmit = async event => {
@@ -29,6 +45,7 @@ const Register = () => {
             setError("");
             await axios.post("http://localhost:4000/api/register", {
                 username: values.username,
+                department: values.department,
                 password: values.password
             })
             .then(response => {
@@ -56,6 +73,14 @@ const Register = () => {
             <h1>Registration</h1>
             <form onSubmit={handleSubmit}>
                 <div className="input"><Input placeholder="Username" onChange={handleChanges} name="username"/></div>
+                <Dropdown
+                onChange={handleChanges}
+                name="department"
+                placeholder="Department"
+                fluid
+                selection
+                options={departments}
+                />
                 <div className="input">
                         {maskPassword ?
                         <Icon name="eye slash" size="large" onClick={() => toggleMask(false)} /> :
